@@ -18,6 +18,22 @@ const useStyles = createUseStyles({
 		width: "100%",
 		display: "flex",
 		justifyContent: "space-between"
+	},
+
+	"@media (max-width: 550px)": {
+		startButtons: {
+			height: "6.5rem",
+			width: "19rem",
+		},
+		h2: {
+			fontSize: "1.6rem",
+		}
+	},
+
+	"@media (max-width: 400px)": {
+		startButtons: {
+			width: "17rem",
+		}
 	}
 });
 

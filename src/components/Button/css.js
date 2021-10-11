@@ -25,6 +25,14 @@ const useStyles = createUseStyles({
 		"&:active": {
 			boxShadow: "none"
 		}
+	},
+	"@media (max-width: 550px)": {
+		button: {
+			height: "3.5rem",
+			width: "8rem",
+			lineHeight: "3.5rem",
+			fontSize: "1.2rem"
+		}
 	}
 });
 
