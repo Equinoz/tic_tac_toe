@@ -1,10 +1,10 @@
 import useStyles from "./css.js";
 
-const Game = () => {
+const Game = (props: { onClick: any}) => {
 	const classes = useStyles();
 
 	return (
-		<div className={ classes.game }>
+		<div onClick={ props.onClick } className={ classes.game }>
 		</div>
 	);
 };
