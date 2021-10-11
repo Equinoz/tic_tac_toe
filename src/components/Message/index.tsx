@@ -1,17 +1,18 @@
 import PropTypes from "prop-types";
 
-import useStyles from "./css.js";
+import useStyles from "./css";
 
-const Message = (props: { message: string }) => {
-	const classes = useStyles();
+const Message = (props: { children: string, state: number }) => {
+	const classes = useStyles(props);
 
 	return (
-		<p className={ classes.message }>{ props.message }</p>
+		<p className={ classes.message } >{ props.children }</p>
 	);
 };
 
 Message.propTypes = {
-	message: PropTypes.string.isRequired
+	children: PropTypes.string.isRequired,
+	state: PropTypes.number.isRequired
 };
 
 export default Message;

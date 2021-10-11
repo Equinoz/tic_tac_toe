@@ -17,7 +17,8 @@ function App() {
 
 	const [state, setState] = useState({
 		state: State.Init,
-		message: "Fake message"
+		// message: "Fake message",
+		message: "Sorry, the computer beat you..."
 	});
 
 	const playerFirst = () => {
@@ -53,10 +54,10 @@ function App() {
 	return (
 		<div className={ classes.app }>
 			<Header />
-			{ state.state === State.Init && <StartButtons onClickPlayer={ playerFirst } onClickComputer={ computerFirst } />}
-			{ state.state !== State.Init && <Message message={ state.message }/> }
+			<StartButtons state={ state.state } onClickPlayer={ playerFirst } onClickComputer={ computerFirst } />
+			<Message state={ state.state }>{ state.message }</Message>
+			<AgainButton state={ state.state } onClick={ playAgain }/>
 			<Game onClick={ play } />
-			{ state.state === State.Over && <AgainButton onClick={ playAgain }/>}
 		</div>
 	);
 }

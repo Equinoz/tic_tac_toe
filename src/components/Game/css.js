@@ -5,7 +5,7 @@ const useStyles = createUseStyles({
 		backgroundColor: "green",
 		height: 500,
 		width: 500,
-		marginBottom: "2rem"
+		margin: "1rem 0 2rem 0"
 	},
 
 	"@media (max-width: 550px)": {
