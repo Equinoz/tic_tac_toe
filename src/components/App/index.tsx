@@ -1,28 +1,65 @@
-import React from "react";
-import logo from "../../logo.svg";
+import { useState } from "react";
+
+import Header from "../Header";
+import StartButtons from "../StartButtons";
+import Message from "../Message";
+import Game from "../Game";
+import AgainButton from "../AgainButton";
+
 import useStyles from "./css.js";
 
 function App() {
-  const classes = useStyles();
+	enum State {
+		Init,
+		Started,
+		Over
+	};
 
-  return (
-    <div className={ classes.app }>
-      <header className={ classes.appHeader }>
-        <img src={ logo } className={ classes.appLogo } alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className={ classes.appLink }
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [state, setState] = useState({
+		state: State.Init,
+		// message: "Fake message",
+		message: "Sorry, the computer beat you..."
+	});
+
+	const playerFirst = () => {
+		setState({
+			...state,
+			state: State.Started
+		});
+	};
+
+	const computerFirst = () => {
+		setState({
+			...state,
+			state: State.Started
+		});
+	};
+
+	const play = () => {
+		setState({
+			...state,
+			state: State.Over
+		});
+	};
+
+	const playAgain = () => {
+		setState({
+			...state,
+			state: State.Init
+		});
+	};
+
+	const classes = useStyles();
+
+	return (
+		<div className={ classes.app }>
+			<Header />
+			<StartButtons state={ state.state } onClickPlayer={ playerFirst } onClickComputer={ computerFirst } />
+			<Message state={ state.state }>{ state.message }</Message>
+			<AgainButton state={ state.state } onClick={ playAgain }/>
+			<Game onClick={ play } />
+		</div>
+	);
 }
 
 export default App;

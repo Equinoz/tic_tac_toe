@@ -15,7 +15,7 @@
   "plugins":["@typescript-eslint"],
   "rules": {
     "prefer-const": "warn",
-    "indent": ["warn", 2],
+    "indent": ["warn", "tab"],
     "semi": "warn",
     "quotes": ["warn", "double"],
     "comma-style": ["warn", "last"],
