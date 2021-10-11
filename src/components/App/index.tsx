@@ -35,11 +35,8 @@ function App() {
 		});
 	};
 
-	const play = () => {
-		setState({
-			...state,
-			state: State.Over
-		});
+	const playMove = (x: number, y:number) => {
+		console.log("Le coup joué", x, ":", y);
 	};
 
 	const playAgain = () => {
@@ -57,7 +54,7 @@ function App() {
 			<StartButtons state={ state.state } onClickPlayer={ playerFirst } onClickComputer={ computerFirst } />
 			<Message state={ state.state }>{ state.message }</Message>
 			<AgainButton state={ state.state } onClick={ playAgain }/>
-			<Game onClick={ play } />
+			<Game state={ state.state } playMove={ playMove } />
 		</div>
 	);
 }
