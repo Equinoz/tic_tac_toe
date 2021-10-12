@@ -29,33 +29,47 @@ const Game = (props: { state: number, playMove: (x: number, y: number) => void }
 	});
 
 	const drawCross = (xCell: number, yCell: number) => {
-		if (context.current) {
-			const x = 200 * xCell + 100,
-				y = 200 * yCell + 100;
+		const x = 200 * xCell + 40,
+			y = 200 * yCell + 40;
 
-			context.current.beginPath();
-			context.current.moveTo(x - 60, y - 60);
-			context.current.lineTo(x + 60, y + 60);
-			context.current.moveTo(x - 60, y + 60);
-			context.current.lineTo(x + 60, y - 60);
-			context.current.stroke();
-		}
+		let i = 0;
+		const drawing = setInterval(() => {
+			if (context.current) {
+				if (i < 121) {
+					context.current.beginPath();
+					context.current.moveTo(x + i, y + i);
+					context.current.lineTo(x + i + 1, y + i + 1);
+					context.current.stroke();
+				}
+				else {
+					context.current.beginPath();
+					context.current.moveTo(x + 240 - i, y - 120 + i);
+					context.current.lineTo(x + 239 - i, y - 119 + i);
+					context.current.stroke();
+				}
+			}
+
+			i++;
+			if (i > 240) {
+				clearInterval(drawing);
+			}
+		}, 4);
 	};
 
 	const drawCircle = (xCell: number, yCell: number) => {
 		const x = 200 * xCell + 100,
 			y = 200 * yCell + 100;
 
-		let i = 0;
+		let i = -(Math.PI / 2);
 		const drawing = setInterval(() => {
 			if (context.current) {
 				context.current.beginPath();
-				context.current.arc(x, y, 65, i, i + 0.03);
+				context.current.arc(x, y, 65, i, i + 0.033);
 				context.current.stroke();
 			}
 
-			i += 0.03;
-			if (i > 6.3) {
+			i += 0.033;
+			if (i > Math.PI * 1.5) {
 				clearInterval(drawing);
 			}
 		}, 5);
