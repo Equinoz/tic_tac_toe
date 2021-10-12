@@ -7,25 +7,51 @@ const Game = (props: { state: number, playMove: (x: number, y: number) => void }
 	const classes = useStyles(props);
 
 	const canvas = useRef<HTMLCanvasElement>(null);
-	let context: any;
+	const context = useRef<CanvasRenderingContext2D | null>(null);
 
 	useEffect(() => {
 		if (canvas.current) {
-			context = canvas.current.getContext("2d");
+			context.current = canvas.current.getContext("2d");
 
-			if (context) {
-				context.fillStyle = "#05171c";
-				context.fillRect(200, 0, 3, 600);
-				context.fillRect(400, 0, 3, 600);
-				context.fillRect(0, 200, 600, 3);
-				context.fillRect(0, 400, 600, 3);
+			if (context.current) {
+				context.current.fillStyle = "#05171c";
 
-				context.lineWidth = 10;
-				context.lineCap = "round";
-				context.strokeStyle = "#084252";
+				context.current.fillRect(200, 0, 3, 600);
+				context.current.fillRect(400, 0, 3, 600);
+				context.current.fillRect(0, 200, 600, 3);
+				context.current.fillRect(0, 400, 600, 3);
+
+				context.current.lineWidth = 10;
+				context.current.lineCap = "round";
+				context.current.strokeStyle = "#084252";
 			}
 		}
 	});
+
+	const drawCross = (xCell: number, yCell: number) => {
+		if (context.current) {
+			const x = 200 * xCell + 100,
+				y = 200 * yCell + 100;
+
+			context.current.beginPath();
+			context.current.moveTo(x - 60, y - 60);
+			context.current.lineTo(x + 60, y + 60);
+			context.current.moveTo(x - 60, y + 60);
+			context.current.lineTo(x + 60, y - 60);
+			context.current.stroke();
+		}
+	};
+
+	const drawCircle = (xCell: number, yCell: number) => {
+		if (context.current) {
+			const x = 200 * xCell + 100,
+				y = 200 * yCell + 100;
+
+			context.current.beginPath();
+			context.current.arc(x, y, 65, 0, 360);
+			context.current.stroke();
+		}
+	};
 
 	const onClick = (e: MouseEvent) => {
 		if (canvas.current) {
@@ -37,33 +63,8 @@ const Game = (props: { state: number, playMove: (x: number, y: number) => void }
 			const y = Math.floor((targetY / rect.height) * 3);
 
 			props.playMove(x, y);
-			drawCross(x, y);
-			// drawCircle(x, y);
-		}
-	};
-
-	const drawCross = (xCell: number, yCell: number) => {
-		if (context) {
-			const x = 200 * xCell + 100,
-				y = 200 * yCell + 100;
-
-			context.beginPath();
-			context.moveTo(x - 60, y - 60);
-			context.lineTo(x + 60, y + 60);
-			context.moveTo(x - 60, y + 60);
-			context.lineTo(x + 60, y - 60);
-			context.stroke();
-		}
-	};
-
-	const drawCircle = (xCell: number, yCell: number) => {
-		if (context) {
-			const x = 200 * xCell + 100,
-				y = 200 * yCell + 100;
-
-			context.beginPath();
-			context.arc(x, y, 65, 0, 360);
-			context.stroke();
+			drawCross(0, 1);
+			drawCircle(1, 1);
 		}
 	};
 
