@@ -1,9 +1,11 @@
 import { createUseStyles } from "react-jss";
 
+import { Status } from "../../enums";
+
 import board from "./board.jpg";
 
 const useStyles = createUseStyles({
-	game: (props: { state: number }) => ({
+	game: (status: number) => ({
 		backgroundImage: `url(${board})`,
 		height: 500,
 		width: 500,
@@ -11,7 +13,7 @@ const useStyles = createUseStyles({
 		border: "1px solid #0c3742",
 		borderRadius: "2.5rem",
 		boxShadow: "2px 2px 3px #0d5466",
-		cursor: (props.state === 1) ? "pointer" : "auto"
+		cursor: (status === Status.Started) ? "pointer" : "auto"
 	}),
 
 	"@media (max-width: 550px)": {

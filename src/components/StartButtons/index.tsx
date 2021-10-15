@@ -1,27 +1,34 @@
-import PropTypes from "prop-types";
+import { useGlobalContext,  } from "../../context";
+import { Status } from "../../enums";
 
 import Button from "../Button";
 
 import useStyles from "./css";
 
-const StartButtons = (props: { state: number, onClickPlayer: () => void, onClickComputer: () => void }) => {
-	const classes = useStyles(props);
+const StartButtons = () => {
+	const { status, setStatus, setMessage } = useGlobalContext();
+
+	const classes = useStyles(status);
+
+	const playerFirst = () => {
+		setStatus(Status.Started);
+		setMessage("play your move");
+	};
+
+	const computerFirst = () => {
+		setStatus(Status.Started);
+		setMessage("computer's move...");
+	};
 
 	return (
 		<div className={ classes.startButtons }>
 			<h2 className={ classes.h2 }>Who goes first?</h2>
 			<div className={ classes.buttons }>
-				<Button onClick={ props.onClickPlayer }>player</Button>
-				<Button onClick={ props.onClickComputer }>computer</Button>
+				<Button onClick={ playerFirst  }>player</Button>
+				<Button onClick={ computerFirst }>computer</Button>
 			</div>
 		</div>
 	);
-};
-
-StartButtons.propTypes = {
-	state: PropTypes.number.isRequired,
-	onClickPlayer: PropTypes.func.isRequired,
-	onClickComputer: PropTypes.func.isRequired
 };
 
 export default StartButtons;

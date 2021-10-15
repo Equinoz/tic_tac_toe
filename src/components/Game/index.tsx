@@ -1,10 +1,14 @@
 import { useRef, useEffect, MouseEvent } from "react";
-import PropTypes from "prop-types";
+
+import { useGlobalContext } from "../../context";
+import { Status } from "../../enums";
 
 import useStyles from "./css";
 
-const Game = (props: { state: number, playMove: (x: number, y: number) => void }) => {
-	const classes = useStyles(props);
+const Game = (props: { playMove: (x: number, y: number) => void }) => {
+	const { status, setStatus } = useGlobalContext();
+
+	const classes = useStyles(status);
 
 	const canvas = useRef<HTMLCanvasElement>(null);
 	const context = useRef<CanvasRenderingContext2D | null>(null);
@@ -76,6 +80,7 @@ const Game = (props: { state: number, playMove: (x: number, y: number) => void }
 	};
 
 	const onClick = (e: MouseEvent) => {
+		setStatus(Status.Over);
 		if (canvas.current) {
 			const rect = canvas.current.getBoundingClientRect();
 
@@ -95,11 +100,6 @@ const Game = (props: { state: number, playMove: (x: number, y: number) => void }
 	return (
 		<canvas ref={ canvas } height="600" width="600" onClick={ (e) => onClick(e) } className={ classes.game }></canvas>
 	);
-};
-
-Game.propTypes = {
-	state: PropTypes.number.isRequired,
-	playMove: PropTypes.func.isRequired
 };
 
 export default Game;

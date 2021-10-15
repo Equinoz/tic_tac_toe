@@ -1,18 +1,15 @@
-import PropTypes from "prop-types";
+import { useGlobalContext } from "../../context";
 
 import useStyles from "./css";
 
-const Message = (props: { children: string, state: number }) => {
-	const classes = useStyles(props);
+const Message = () => {
+	const { status, message } = useGlobalContext();
+
+	const classes = useStyles(status);
 
 	return (
-		<p className={ classes.message } >{ props.children }</p>
+		<p className={ classes.message }>{ message && message[0].toUpperCase() + message.slice(1) }</p>
 	);
-};
-
-Message.propTypes = {
-	children: PropTypes.string.isRequired,
-	state: PropTypes.number.isRequired
 };
 
 export default Message;
