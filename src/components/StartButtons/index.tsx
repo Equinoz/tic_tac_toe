@@ -1,23 +1,34 @@
-import { useGlobalContext,  } from "../../context";
+import { useGlobalContext } from "../../context";
 import { Status } from "../../enums";
+import { Match } from "../../utils/Match";
 
 import Button from "../Button";
 
 import useStyles from "./css";
 
 const StartButtons = () => {
-	const { status, setStatus, setMessage } = useGlobalContext();
+	const { state, setState } = useGlobalContext();
 
-	const classes = useStyles(status);
+	const classes = useStyles(state.status);
 
 	const playerFirst = () => {
-		setStatus(Status.Started);
-		setMessage("play your move");
+		setState({
+			...state,
+			status: Status.Started,
+			message: "play your move",
+			playerFirst: true,
+			match: new Match(false)
+		});
 	};
 
 	const computerFirst = () => {
-		setStatus(Status.Started);
-		setMessage("computer's move...");
+		setState({
+			...state,
+			status: Status.Started,
+			message: "computer's move...",
+			playerFirst: false,
+			match: new Match()
+		});
 	};
 
 	return (

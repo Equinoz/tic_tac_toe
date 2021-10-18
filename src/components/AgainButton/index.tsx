@@ -6,13 +6,13 @@ import Button from "../Button";
 import useStyles from "./css";
 
 const AgainButton = () => {
-	const { status, setStatus } = useGlobalContext();
+	const { state, setState } = useGlobalContext();
 
-	const classes = useStyles(status);
+	const classes = useStyles(state.status);
 
 	return (
 		<div className={ classes.againButton }>
-			<Button onClick={ () => setStatus(Status.Init) }>play again?</Button>
+			<Button onClick={ () => setState({ ...state, status: Status.Init }) }>play again?</Button>
 		</div>
 	);
 };

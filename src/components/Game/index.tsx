@@ -5,19 +5,22 @@ import { Status } from "../../enums";
 
 import useStyles from "./css";
 
-const Game = (props: { playMove: (x: number, y: number) => void }) => {
-	const { status, setStatus } = useGlobalContext();
+const Game = () => {
+	const { state, setState } = useGlobalContext();
+	const { status, message, playerFirst, match } = state;
 
 	const classes = useStyles(status);
 
 	const canvas = useRef<HTMLCanvasElement>(null);
 	const context = useRef<CanvasRenderingContext2D | null>(null);
 
+	// TODO empêcher les clics intempestifs, gérer les parties nulles, ajouter le trait de fin, voir les temps de dessin qui se chevauchent, pas deux fois la même case, clic qui bloque le jeu de l'ordinateur
 	useEffect(() => {
 		if (canvas.current) {
 			context.current = canvas.current.getContext("2d");
 
 			if (context.current) {
+				context.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
 				context.current.fillStyle = "#05171c";
 
 				context.current.fillRect(200, 0, 3, 600);
@@ -30,7 +33,39 @@ const Game = (props: { playMove: (x: number, y: number) => void }) => {
 				context.current.strokeStyle = "#084252";
 			}
 		}
-	});
+	}, [match]);
+
+	useEffect(() => {
+		setTimeout(() => {
+			if (match) {
+				const computerMove = match.getComputerMove();
+				if (computerMove) {
+					const [x, y] = computerMove;
+					if (playerFirst) {
+						drawCircle(x, y);
+					}
+					else {
+						drawCross(x, y);
+					}
+					setTimeout(() => {
+						if (match.isOver) {
+							setState({
+								...state,
+								status: Status.Over,
+								message: "sorry the computer beat you..."
+							});
+						}
+						else {
+							setState({
+								...state,
+								message: "play your move"
+							});
+						}
+					}, 1200);
+				}
+			}
+		}, 1000 + Math.floor(Math.random() * 3000));
+	}, [state, setState, message, playerFirst, match]);
 
 	const drawCross = (xCell: number, yCell: number) => {
 		const x = 200 * xCell + 40,
@@ -80,22 +115,52 @@ const Game = (props: { playMove: (x: number, y: number) => void }) => {
 	};
 
 	const onClick = (e: MouseEvent) => {
-		setStatus(Status.Over);
-		if (canvas.current) {
-			const rect = canvas.current.getBoundingClientRect();
+		if (!match.isOver && !match.getComputerMove()) {
+			if (canvas.current) {
+				const rect = canvas.current.getBoundingClientRect();
 
-			const targetX = e.clientX - rect.left;
-			const targetY = e.clientY - Math.floor(rect.top);
-			const x = Math.floor((targetX / rect.width) * 3);
-			const y = Math.floor((targetY / rect.height) * 3);
+				const targetX = e.clientX - rect.left;
+				const targetY = e.clientY - Math.floor(rect.top);
+				const x = Math.floor((targetX / rect.width) * 3);
+				const y = Math.floor((targetY / rect.height) * 3);
 
-			props.playMove(x, y);
-			drawCross(0, 1);
-			setTimeout(() => {
-				drawCircle(1, 1);
-			}, 1200);
+				match.playerMove(x, y);
+				if (playerFirst) {
+					drawCross(x, y);
+				}
+				else {
+					drawCircle(x, y);
+				}
+				setTimeout(() => {
+					if (match.isOver) {
+						setState({
+							...state,
+							status: Status.Over,
+							message: "congratulations you win!"
+						});
+					}
+					else {
+						setState({
+							...state,
+							message: "computer's move...",
+							match: match
+						});
+					}
+				}, 1200);
+			}
+		}
+		else {
+			console.log("Pas encore");
 		}
 	};
+	// else {
+	// 	console.log("FINI!!!!");
+	// 	setState({
+	// 		...state,
+	// 		status: Status.Over,
+	// 		message: "blablaaa"
+	// 	});
+	// }
 
 	return (
 		<canvas ref={ canvas } height="600" width="600" onClick={ (e) => onClick(e) } className={ classes.game }></canvas>

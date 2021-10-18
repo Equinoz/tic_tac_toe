@@ -3,7 +3,7 @@ import { useGlobalContext } from "../../context";
 import useStyles from "./css";
 
 const Message = () => {
-	const { status, message } = useGlobalContext();
+	const { state: { status, message } } = useGlobalContext();
 
 	const classes = useStyles(status);
 

@@ -1,6 +1,11 @@
-type Context = {
+type State = {
 	status: Status,
-	setStatus: (s: Status) => void,
 	message: string,
-	setMessage: (m: string) => void,
+	playerFirst: Boolean,
+	match?: Match
+};
+
+type Context = {
+	state: State,
+	setState: (s: State) => void
 };

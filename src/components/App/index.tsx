@@ -12,23 +12,23 @@ import AgainButton from "../AgainButton";
 import useStyles from "./css.js";
 
 function App() {
-	const playMove = (x: number, y:number) => {
-		console.log("Le coup joué", x, ":", y);
-	};
-
 	const classes = useStyles();
 
-	const [status, setStatus] = useState<Status>(Status.Init);
-	const [message, setMessage] = useState<string>("");
+	const [state, setState] = useState<State>({
+		status: Status.Init,
+		message: "",
+		playerFirst: true,
+		match: null
+	});
 
 	return (
-		<GlobalContext.Provider value={{ status, setStatus, message, setMessage }}>
+		<GlobalContext.Provider value={{ state, setState }}>
 			<div className={ classes.app }>
 				<Header />
 				<StartButtons />
 				<Message />
 				<AgainButton />
-				<Game playMove={ playMove } />
+				<Game />
 			</div>
 		</GlobalContext.Provider>
 	);
