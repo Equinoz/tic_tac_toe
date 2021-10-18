@@ -57,6 +57,71 @@ const Game = () => {
 				message,
 				moveAllowed: false
 			});
+
+			if (match.isWinner !== 0) {
+				const board = match.getBoard();
+				let start: Array<number>,
+					end: Array<number>;
+
+				if (board[0][0] === board[0][1] && board[0][1] === board[0][2]) {
+					start = [25, 100];
+					end = [575, 100];
+				}
+				else if  (board[1][0] === board[1][1] && board[1][1] === board[1][2]) {
+					start = [25, 300];
+					end = [575, 300];
+				}
+				else if  (board[2][0] === board[2][1] && board[2][1] === board[2][2]) {
+					start = [25, 500];
+					end = [575, 500];
+				}
+				else if  (board[0][0] === board[1][0] && board[1][0] === board[2][0]) {
+					start = [100, 25];
+					end = [100, 575];
+				}
+				else if  (board[0][1] === board[1][1] && board[1][1] === board[2][1]) {
+					start = [300, 25];
+					end = [300, 575];
+				}
+				else if  (board[0][2] === board[1][2] && board[1][2] === board[2][2]) {
+					start = [500, 25];
+					end = [500, 575];
+				}
+				else if  (board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
+					start = [25, 25];
+					end = [575, 575];
+				}
+				else {
+					start = [25, 575];
+					end = [575, 25];
+				}
+				if (context.current) {
+					context.current.strokeStyle = "#072e39";
+					context.current.lineWidth = 14;
+
+					const deltaX = end[0] - start[0];
+					const deltaY = end[1] - start[1];
+					const stepX = deltaX / 300;
+					const stepY = deltaY / 300;
+					let ix = 0,
+						iy = 0;
+
+					const drawing = setInterval(() => {
+						if (context.current) {
+							context.current.beginPath();
+							context.current.moveTo(start[0] + ix, start[1] + iy);
+							context.current.lineTo(start[0] + ix + 1, start[1] + iy + 1);
+							context.current.stroke();
+						}
+
+						ix += stepX;
+						iy += stepY;
+						if (Math.abs(ix) > Math.abs(deltaX) || Math.abs(iy) > Math.abs(deltaY)) {
+							clearInterval(drawing);
+						}
+					}, 1);
+				}
+			}
 		}, [state, setState, match]
 	);
 
@@ -161,7 +226,6 @@ const Game = () => {
 						setState({
 							...state,
 							message: "computer's move...",
-							match: match,
 							moveAllowed: false
 						});
 					}
