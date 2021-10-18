@@ -6,8 +6,9 @@ export const GlobalContext = createContext<Context>({
 	state: {
 		status: Status.Init,
 		message: "",
-		playerFirst: true,
-		match: null
+		playerFirst: false,
+		match: null,
+		moveAllowed: false
 	},
 	setState: (State) => {}
 });

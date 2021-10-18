@@ -17,8 +17,9 @@ function App() {
 	const [state, setState] = useState<State>({
 		status: Status.Init,
 		message: "",
-		playerFirst: true,
-		match: null
+		playerFirst: false,
+		match: null,
+		moveAllowed: false
 	});
 
 	return (

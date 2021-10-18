@@ -1,4 +1,4 @@
-import { useRef, useEffect, MouseEvent } from "react";
+import { useRef, useEffect, useCallback, MouseEvent } from "react";
 
 import { useGlobalContext } from "../../context";
 import { Status } from "../../enums";
@@ -6,15 +6,16 @@ import { Status } from "../../enums";
 import useStyles from "./css";
 
 const Game = () => {
-	const { state, setState } = useGlobalContext();
-	const { status, message, playerFirst, match } = state;
 
-	const classes = useStyles(status);
+	const { state, setState } = useGlobalContext();
+	const { message, playerFirst, match, moveAllowed } = state;
+
+	const classes = useStyles(moveAllowed);
 
 	const canvas = useRef<HTMLCanvasElement>(null);
 	const context = useRef<CanvasRenderingContext2D | null>(null);
 
-	// TODO empêcher les clics intempestifs, gérer les parties nulles, ajouter le trait de fin, voir les temps de dessin qui se chevauchent, pas deux fois la même case, clic qui bloque le jeu de l'ordinateur
+	// TODO ajouter le trait de fin, voir les temps de dessin qui se chevauchent, pas deux fois la même case, clic qui bloque le jeu de l'ordinateur
 	useEffect(() => {
 		if (canvas.current) {
 			context.current = canvas.current.getContext("2d");
@@ -35,6 +36,30 @@ const Game = () => {
 		}
 	}, [match]);
 
+	const handleEndgame = useCallback(
+		() => {
+			let message: string;
+
+			switch (match.isWinner) {
+			case 0:
+				message = "draw!";
+				break;
+			case 1:
+				message = "sorry the computer beat you...";
+				break;
+			default:
+				message = "congratulations you win!";
+			}
+
+			setState({
+				...state,
+				status: Status.Over,
+				message,
+				moveAllowed: false
+			});
+		}, [state, setState, match]
+	);
+
 	useEffect(() => {
 		setTimeout(() => {
 			if (match) {
@@ -49,23 +74,20 @@ const Game = () => {
 					}
 					setTimeout(() => {
 						if (match.isOver) {
-							setState({
-								...state,
-								status: Status.Over,
-								message: "sorry the computer beat you..."
-							});
+							handleEndgame();
 						}
 						else {
 							setState({
 								...state,
-								message: "play your move"
+								message: "play your move",
+								moveAllowed: true
 							});
 						}
 					}, 1200);
 				}
 			}
 		}, 1000 + Math.floor(Math.random() * 3000));
-	}, [state, setState, message, playerFirst, match]);
+	}, [state, setState, message, playerFirst, match, handleEndgame]);
 
 	const drawCross = (xCell: number, yCell: number) => {
 		const x = 200 * xCell + 40,
@@ -115,7 +137,7 @@ const Game = () => {
 	};
 
 	const onClick = (e: MouseEvent) => {
-		if (!match.isOver && !match.getComputerMove()) {
+		if (moveAllowed && !match.isOver && !match.getComputerMove()) {
 			if (canvas.current) {
 				const rect = canvas.current.getBoundingClientRect();
 
@@ -133,17 +155,14 @@ const Game = () => {
 				}
 				setTimeout(() => {
 					if (match.isOver) {
-						setState({
-							...state,
-							status: Status.Over,
-							message: "congratulations you win!"
-						});
+						handleEndgame();
 					}
 					else {
 						setState({
 							...state,
 							message: "computer's move...",
-							match: match
+							match: match,
+							moveAllowed: false
 						});
 					}
 				}, 1200);
@@ -153,14 +172,6 @@ const Game = () => {
 			console.log("Pas encore");
 		}
 	};
-	// else {
-	// 	console.log("FINI!!!!");
-	// 	setState({
-	// 		...state,
-	// 		status: Status.Over,
-	// 		message: "blablaaa"
-	// 	});
-	// }
 
 	return (
 		<canvas ref={ canvas } height="600" width="600" onClick={ (e) => onClick(e) } className={ classes.game }></canvas>

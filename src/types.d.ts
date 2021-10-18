@@ -2,7 +2,8 @@ type State = {
 	status: Status,
 	message: string,
 	playerFirst: Boolean,
-	match?: Match
+	match?: Match,
+	moveAllowed: Boolean
 };
 
 type Context = {

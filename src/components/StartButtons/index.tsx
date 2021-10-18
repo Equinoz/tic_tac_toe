@@ -17,7 +17,8 @@ const StartButtons = () => {
 			status: Status.Started,
 			message: "play your move",
 			playerFirst: true,
-			match: new Match(false)
+			match: new Match(false),
+			moveAllowed: true
 		});
 	};
 
