@@ -6,7 +6,6 @@ import { Status } from "../../enums";
 import useStyles from "./css";
 
 const Game = () => {
-
 	const { state, setState } = useGlobalContext();
 	const { message, playerFirst, match, moveAllowed } = state;
 
@@ -15,7 +14,7 @@ const Game = () => {
 	const canvas = useRef<HTMLCanvasElement>(null);
 	const context = useRef<CanvasRenderingContext2D | null>(null);
 
-	// TODO ajouter le trait de fin, voir les temps de dessin qui se chevauchent, pas deux fois la même case, clic qui bloque le jeu de l'ordinateur
+	// TODO refacto, voir les temps de dessin qui se chevauchent
 	useEffect(() => {
 		if (canvas.current) {
 			context.current = canvas.current.getContext("2d");
@@ -203,6 +202,10 @@ const Game = () => {
 
 	const onClick = (e: MouseEvent) => {
 		if (moveAllowed && !match.isOver && !match.getComputerMove()) {
+			setState({
+				...state,
+				moveAllowed: false
+			});
 			if (canvas.current) {
 				const rect = canvas.current.getBoundingClientRect();
 
@@ -211,29 +214,33 @@ const Game = () => {
 				const x = Math.floor((targetX / rect.width) * 3);
 				const y = Math.floor((targetY / rect.height) * 3);
 
-				match.playerMove(x, y);
-				if (playerFirst) {
-					drawCross(x, y);
-				}
-				else {
-					drawCircle(x, y);
-				}
-				setTimeout(() => {
-					if (match.isOver) {
-						handleEndgame();
+				if (match.playerMove(x, y)) {
+					if (playerFirst) {
+						drawCross(x, y);
 					}
 					else {
-						setState({
-							...state,
-							message: "computer's move...",
-							moveAllowed: false
-						});
+						drawCircle(x, y);
 					}
-				}, 1200);
+					setTimeout(() => {
+						if (match.isOver) {
+							handleEndgame();
+						}
+						else {
+							setState({
+								...state,
+								message: "computer's move...",
+								moveAllowed: false
+							});
+						}
+					}, 1200);
+				}
+				else {
+					setState({
+						...state,
+						moveAllowed: true
+					});
+				}
 			}
-		}
-		else {
-			console.log("Pas encore");
 		}
 	};
 
