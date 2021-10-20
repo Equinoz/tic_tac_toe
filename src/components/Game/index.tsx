@@ -14,7 +14,7 @@ const Game = () => {
 	const canvas = useRef<HTMLCanvasElement>(null);
 	const context = useRef<CanvasRenderingContext2D | null>(null);
 
-	// TODO refacto, voir les temps de dessin qui se chevauchent
+	// TODO refacto
 	useEffect(() => {
 		if (canvas.current) {
 			context.current = canvas.current.getContext("2d");
@@ -125,10 +125,11 @@ const Game = () => {
 	);
 
 	useEffect(() => {
-		setTimeout(() => {
-			if (match) {
-				const computerMove = match.getComputerMove();
-				if (computerMove) {
+		if (match) {
+			const computerMove = match.getComputerMove();
+			if (computerMove) {
+				const delay = 2000 + Math.floor(Math.random() * 2000);
+				setTimeout(() => {
 					const [x, y] = computerMove;
 					if (playerFirst) {
 						drawCircle(x, y);
@@ -137,7 +138,7 @@ const Game = () => {
 						drawCross(x, y);
 					}
 					setTimeout(() => {
-						if (match.isOver) {
+						if (match.isWinner === 1 || match.isWinner === 0) {
 							handleEndgame();
 						}
 						else {
@@ -148,9 +149,9 @@ const Game = () => {
 							});
 						}
 					}, 1200);
-				}
+				}, delay);
 			}
-		}, 1000 + Math.floor(Math.random() * 3000));
+		}
 	}, [state, setState, message, playerFirst, match, handleEndgame]);
 
 	const drawCross = (xCell: number, yCell: number) => {
@@ -222,7 +223,7 @@ const Game = () => {
 						drawCircle(x, y);
 					}
 					setTimeout(() => {
-						if (match.isOver) {
+						if (match.isWinner === 2 || (match.isWinner === 0 && playerFirst)) {
 							handleEndgame();
 						}
 						else {
