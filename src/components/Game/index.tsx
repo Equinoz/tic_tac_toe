@@ -84,6 +84,10 @@ const Game = () => {
 	};
 
 	useEffect(() => {
+		if (canvas.current) {
+			context.current = canvas.current.getContext("2d");
+		}
+
 		drawBoard(canvas, context);
 	}, [match]);
 
