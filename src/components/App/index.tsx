@@ -14,6 +14,7 @@ import useStyles from "./css.js";
 function App() {
 	const classes = useStyles();
 
+	// Initial global state
 	const [state, setState] = useState<State>({
 		status: Status.Init,
 		message: "",

@@ -6,7 +6,7 @@ const Header = () => {
 	return (
 		<header className={ classes.header }>
 			<h1 className={ classes.h1 }>Tic tac toe</h1>
-			<p className={ classes.p }>Made with React, source code at <a href="https://github.com/Equinoz/tic_tac_toe">https://github.com/Equinoz/tic_tac_toe</a></p>
+			<p className={ classes.p }>Made with React, Typescript and React-JSS! Source code at <a href="https://github.com/Equinoz/tic_tac_toe">https://github.com/Equinoz/tic_tac_toe</a></p>
 		</header>
 	);
 };

@@ -15,6 +15,7 @@ const Game = () => {
 	const canvas = useRef<HTMLCanvasElement>(null),
 		context = useRef<CanvasRenderingContext2D | null>(null);
 
+	// Handle the winner displaying when the game is over
 	const handleEndgame = useCallback(
 		() => {
 			let message: string;
@@ -37,14 +38,17 @@ const Game = () => {
 				moveAllowed: false
 			});
 
+			// If the match is not draw, display a winning line
 			if (match.isWinner !== 0) {
 				determineWinner(match.getBoard(), context);
 			}
 		}, [state, setState, match]
 	);
 
+	// Handle the player's click
 	const onClick = (e: MouseEvent) => {
 		if (moveAllowed && !match.isOver && !match.getComputerMove()) {
+			// New click forbidden
 			setState({
 				...state,
 				moveAllowed: false
@@ -55,6 +59,7 @@ const Game = () => {
 			if (clickPosition) {
 				const [x, y] = clickPosition;
 
+				// Move allowed
 				if (match.playerMove(x, y)) {
 					if (playerFirst) {
 						drawCross(context, x, y);
@@ -63,11 +68,13 @@ const Game = () => {
 						drawCircle(context, x, y);
 					}
 
+					// Game paused during animation time
 					setTimeout(() => {
 						if (match.isWinner === 2 || (playerFirst && match.isWinner === 0)) {
 							handleEndgame();
 						}
 						else {
+							// Computer's turn
 							setState({
 								...state,
 								message: "computer's move...",
@@ -77,6 +84,7 @@ const Game = () => {
 					}, 1200);
 				}
 				else {
+					// If move isn't correct, allow a new click
 					setState({
 						...state,
 						moveAllowed: true
@@ -86,6 +94,7 @@ const Game = () => {
 		}
 	};
 
+	// Draw an empty board for each new match
 	useEffect(() => {
 		if (canvas.current) {
 			context.current = canvas.current.getContext("2d");
@@ -94,11 +103,13 @@ const Game = () => {
 		drawBoard(canvas, context);
 	}, [match]);
 
+	// Check if the computer have to play in case of changing state
 	useEffect(() => {
 		if (match) {
 			const computerMove = match.getComputerMove();
 
 			if (computerMove) {
+				// Simulate a reflexion time
 				setTimeout(() => {
 					const [x, y] = computerMove;
 
@@ -109,11 +120,13 @@ const Game = () => {
 						drawCross(context, x, y);
 					}
 
+					// Game paused during animation time
 					setTimeout(() => {
 						if (match.isOver) {
 							handleEndgame();
 						}
 						else {
+							// Player's turn
 							setState({
 								...state,
 								message: "play your move",

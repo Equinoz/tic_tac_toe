@@ -1,5 +1,12 @@
 import { MouseEvent } from "react";
 
+/**
+ * Draw a a circle on the canvas
+ * @param {Object} context - the context
+ * @param {any} context.current - the canvas' current context
+ * @param {number} xCell - clicked case's abscissa
+ * @param {number} yCell - clicked case's ordinate
+ */
 const drawCircle = (context: { current: any }, xCell: number, yCell: number) => {
 	if (context.current) {
 		const x = 200 * xCell + 100,
@@ -20,6 +27,13 @@ const drawCircle = (context: { current: any }, xCell: number, yCell: number) => 
 	}
 };
 
+/**
+ * Draw a cross on the canvas
+ * @param {Object} context - the context
+ * @param {any} context.current - the canvas' current context
+ * @param {number} xCell - clicked case's abscissa
+ * @param {number} yCell - clicked case's ordinate
+ */
 const drawCross = (context: { current: any }, xCell: number, yCell: number) => {
 	if (context.current) {
 		const x = 200 * xCell + 40,
@@ -29,10 +43,12 @@ const drawCross = (context: { current: any }, xCell: number, yCell: number) => {
 
 		const drawing = setInterval(() => {
 			context.current.beginPath();
+			// First line
 			if (i < 121) {
 				context.current.moveTo(x + i, y + i);
 				context.current.lineTo(x + i + 1, y + i + 1);
 			}
+			// Second line
 			else {
 				context.current.moveTo(x + 240 - i, y - 120 + i);
 				context.current.lineTo(x + 239 - i, y - 119 + i);
@@ -46,7 +62,14 @@ const drawCross = (context: { current: any }, xCell: number, yCell: number) => {
 		}, 4);
 	}
 };
-
+  
+/**
+ * Draw the grid on the board
+ * @param {Object} canvas - the canvas
+ * @param {any} canvas.current - the current canvas
+ * @param {Object} context - the context
+ * @param {any} context.current - the canvas' current context
+ */
 const drawBoard = (canvas: { current: any }, context : { current: any }) => {
 	if (context.current) {
 		context.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
@@ -63,11 +86,19 @@ const drawBoard = (canvas: { current: any }, context : { current: any }) => {
 	}
 };
 
+/**
+ * Determine the winning line and draw it
+ * @param {Array<Array<number>>} board - a bidirectionnal array that represents the current game
+ * @param {Object} context - the context
+ * @param {any} context.current - the canvas' current context
+ */
 const determineWinner = (board: Array<Array<number>>, context: { current: any }) => {
 	if (context.current) {
+		// Convert the bidirectionnal array to simple array
 		const cases: Array<number> = [];
 		board.forEach(line => line.forEach(x => cases.push(x)));
 
+		// Determine the line's cordinates
 		let start: Array<number>,
 			end: Array<number>;
 
@@ -96,6 +127,7 @@ const determineWinner = (board: Array<Array<number>>, context: { current: any })
 			start = [35, 565]; end = [565, 35];
 		}
 
+		// Draw the winning line
 		context.current.strokeStyle = "#072e39";
 		context.current.lineWidth = 14;
 
@@ -121,6 +153,13 @@ const determineWinner = (board: Array<Array<number>>, context: { current: any })
 	}
 };
 
+/**
+ * Determine the click's coordinates on the grid
+ * @param {MouseEvent} e - the event click
+ * @param {Object} canvas - the canvas
+ * @param {any} canvas.current - the current canvas
+ * @returns {Array<number>|false} - the click's coordinates or null
+ */
 const getClickPosition = (e: MouseEvent, canvas: { current: any }): Array<number> | false => {
 	if (canvas.current) {
 		const rect = canvas.current.getBoundingClientRect();
