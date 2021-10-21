@@ -49,9 +49,11 @@ const Game = () => {
 				...state,
 				moveAllowed: false
 			});
-			const res = getClickPosition(e, canvas);
-			if (res) {
-				const [x, y] = res;
+			
+			const clickPosition = getClickPosition(e, canvas);
+
+			if (clickPosition) {
+				const [x, y] = clickPosition;
 
 				if (match.playerMove(x, y)) {
 					if (playerFirst) {
@@ -60,8 +62,9 @@ const Game = () => {
 					else {
 						drawCircle(context, x, y);
 					}
+
 					setTimeout(() => {
-						if (match.isWinner === 2 || (match.isWinner === 0 && playerFirst)) {
+						if (match.isWinner === 2 || (playerFirst && match.isWinner === 0)) {
 							handleEndgame();
 						}
 						else {
@@ -94,18 +97,20 @@ const Game = () => {
 	useEffect(() => {
 		if (match) {
 			const computerMove = match.getComputerMove();
+
 			if (computerMove) {
-				const delay = 2000 + Math.floor(Math.random() * 2000);
 				setTimeout(() => {
 					const [x, y] = computerMove;
+
 					if (playerFirst) {
 						drawCircle(context, x, y);
 					}
 					else {
 						drawCross(context, x, y);
 					}
+
 					setTimeout(() => {
-						if (match.isWinner === 1 || match.isWinner === 0) {
+						if (match.isOver) {
 							handleEndgame();
 						}
 						else {
@@ -116,7 +121,7 @@ const Game = () => {
 							});
 						}
 					}, 1200);
-				}, delay);
+				}, 2000 + Math.floor(Math.random() * 2000));
 			}
 		}
 	}, [state, setState, message, playerFirst, match, handleEndgame]);
