@@ -11,6 +11,7 @@ const StartButtons = () => {
 
 	const classes = useStyles(state.status);
 
+	// Game configuration for player first
 	const playerFirst = () => {
 		setState({
 			...state,
@@ -22,6 +23,7 @@ const StartButtons = () => {
 		});
 	};
 
+	// Game configuration for computer first
 	const computerFirst = () => {
 		setState({
 			...state,
