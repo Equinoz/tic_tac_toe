@@ -1,8 +1,10 @@
 import { createUseStyles } from "react-jss";
 
+import { Status } from "../../enums";
+
 const useStyles = createUseStyles({
-	againButton: (props: { state: number }) => ({
-		height: (props.state === 2) ? "5rem" : 0,
+	againButton: (status: number) => ({
+		height: (status === Status.Over) ? "5rem" : 0,
 		width: "12rem",
 		display: "flex",
 		justifyContent: "center",

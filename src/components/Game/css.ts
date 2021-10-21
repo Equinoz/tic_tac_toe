@@ -3,7 +3,7 @@ import { createUseStyles } from "react-jss";
 import board from "./board.jpg";
 
 const useStyles = createUseStyles({
-	game: (props: { state: number }) => ({
+	game: (moveAllowed: Boolean) => ({
 		backgroundImage: `url(${board})`,
 		height: 500,
 		width: 500,
@@ -11,7 +11,7 @@ const useStyles = createUseStyles({
 		border: "1px solid #0c3742",
 		borderRadius: "2.5rem",
 		boxShadow: "2px 2px 3px #0d5466",
-		cursor: (props.state === 1) ? "pointer" : "auto"
+		cursor: (moveAllowed) ? "pointer" : "auto"
 	}),
 
 	"@media (max-width: 550px)": {
