@@ -15,6 +15,7 @@ const useStyles = createUseStyles({
 		boxShadow: "3px 3px 3px #072a33",
 		cursor: "pointer",
 		transition: "ease-out 0.5s",
+		"-webkit-tap-highlight-color": "transparent",
 
 		"&:hover": {
 			backgroundColor: "#06708E",

@@ -138,18 +138,21 @@ const determineWinner = (board: Array<Array<number>>, context: { current: any })
 		let x = 0,
 			y = 0;
 
-		const drawing = setInterval(() => {
-			context.current.beginPath();
-			context.current.moveTo(start[0] + x, start[1] + y);
-			context.current.lineTo(start[0] + x + 1, start[1] + y + 1);
-			context.current.stroke();
+		// Interval between symbols' and line's drawing
+		setTimeout(() => {
+			const drawing = setInterval(() => {
+				context.current.beginPath();
+				context.current.moveTo(start[0] + x, start[1] + y);
+				context.current.lineTo(start[0] + x + 1, start[1] + y + 1);
+				context.current.stroke();
 
-			x += stepX;
-			y += stepY;
-			if (x > deltaX || Math.abs(y) > Math.abs(deltaY)) {
-				clearInterval(drawing);
-			}
-		}, 1);
+				x += stepX;
+				y += stepY;
+				if (x > deltaX || Math.abs(y) > Math.abs(deltaY)) {
+					clearInterval(drawing);
+				}
+			}, 1);
+		}, 800);
 	}
 };
 
