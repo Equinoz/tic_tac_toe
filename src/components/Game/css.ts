@@ -11,7 +11,8 @@ const useStyles = createUseStyles({
 		border: "1px solid #0c3742",
 		borderRadius: "2.5rem",
 		boxShadow: "2px 2px 3px #0d5466",
-		cursor: (moveAllowed) ? "pointer" : "auto"
+		cursor: (moveAllowed) ? "pointer" : "auto",
+		"-webkit-tap-highlight-color": "transparent"
 	}),
 
 	"@media (max-width: 550px)": {
