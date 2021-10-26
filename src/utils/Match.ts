@@ -2,6 +2,7 @@
 export class Match {
   private static readonly CROSS: number = 1;
   private static readonly CIRCLE: number = 2;
+  private static readonly GRIDLINES: Array<Array<number>> = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
 
   private _first: boolean;
   private _computerSymbol: number;
@@ -26,6 +27,38 @@ export class Match {
   }
 
   /**
+   * Check the board to determine the next computer's move
+   * @param {number} symbol - the move's symbol
+   * @param {boolean} empty - true to find lines with two empty cells
+   * @return {number} - if determined index of the next move, -1 otherwise
+   */
+  private _checkBoard = (symbol: number, empty = false): number => {
+  	const symbolsAmount = (empty) ? 1 : 2,
+  		emptyCellsAmount = (empty) ? 2 : 1;
+
+  	for (const cells of Match.GRIDLINES) {
+  		const line = [this._board[cells[0]], this._board[cells[1]], this._board[cells[2]]];
+
+  		if (
+  			(line.filter(elt => elt === symbol).length === symbolsAmount) &&
+        (line.filter(elt => elt === 0).length === emptyCellsAmount)
+  		) {
+  			if (empty) {
+  				return (this._board[cells[1]]) ?
+  					cells[[0, 2][Math.floor(Math.random() * 2)]] :
+  					cells[1];
+  			}
+  			else {
+  				const index = line.findIndex(elt => elt !== symbol);
+  				return cells[index];
+  			}
+  		}
+  	}
+
+  	return -1;
+  }
+
+  /**
    * Check if the match is over, and if so determine the winner
    * @param {number} symbol - the move's symbol
    */
@@ -33,20 +66,17 @@ export class Match {
   	if (this._movesCount < 5) {
   		return;
   	}
-  	else if (
-  		(this._board[0] === symbol && this._board[1] === symbol && this._board[2] === symbol) ||
-      (this._board[3] === symbol && this._board[4] === symbol && this._board[5] === symbol) ||
-      (this._board[6] === symbol && this._board[7] === symbol && this._board[8] === symbol) ||
-      (this._board[0] === symbol && this._board[3] === symbol && this._board[6] === symbol) ||
-      (this._board[1] === symbol && this._board[4] === symbol && this._board[7] === symbol) ||
-      (this._board[2] === symbol && this._board[5] === symbol && this._board[8] === symbol) ||
-      (this._board[0] === symbol && this._board[4] === symbol && this._board[8] === symbol) ||
-      (this._board[2] === symbol && this._board[4] === symbol && this._board[6] === symbol)
-  	) {
-  		this._isOver = true;
-  		this._isWinner = (symbol === this._computerSymbol) ? 1 : 2;
+
+  	for (const cells of Match.GRIDLINES) {
+  		const line = [this._board[cells[0]], this._board[cells[1]], this._board[cells[2]]];
+
+  		if (line.every(elt => elt === symbol)) {
+  			this._isOver = true;
+  			this._isWinner = (symbol === this._computerSymbol) ? 1 : 2;
+  		}
   	}
-  	else if (this._movesCount > 8) {
+
+  	if (!this._isOver && this._movesCount > 8) {
   		this._isOver = true;
   		this._isWinner = 0;
   	}
@@ -93,6 +123,38 @@ export class Match {
   	}
 
   	let index = -1;
+
+  	if (this._movesCount === 0) {
+  		index = [0, 2, 6, 8][Math.floor(Math.random() * 4)];
+  	}
+
+  	if (this._movesCount === 1) {
+  		index = (this._board[4] === 0) ? 4 : [0, 2, 6, 8][Math.floor(Math.random() * 4)];
+  	}
+
+  	if (this._movesCount === 2) {
+  		for (const corners of [
+  			[this._board[0], this._board[8]],
+  			[this._board[2], this._board[6]]
+  		]) {
+  			if (corners.includes(1) && corners.includes(2)) {
+  				index = 4;
+  			}
+  		}
+  	}
+
+  	if (index === -1) {
+  		index = this._checkBoard(this._computerSymbol);
+  	}
+
+  	if (index === -1) {
+  		index = this._checkBoard(this._playerSymbol);
+  	}
+    
+  	if (index === -1) {
+  		index = this._checkBoard(this._computerSymbol, true);
+  	}
+
   	while (index === -1) {
   		const randomPosition = Math.floor(Math.random() * 9);
   		if (this._board[randomPosition] === 0) {
